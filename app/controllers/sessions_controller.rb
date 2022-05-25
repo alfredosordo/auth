@@ -10,8 +10,9 @@ def create
     if @user 
     # Step 1a: if yes, check the password (go to Step 2)
     # Step 2: check the password to see if it matches the user's password
-            if params["password"] == @user["password"]
-    # Step 2a: if yes, go to company's page
+            if BCrypt::Password.new(@user["password"]) == params["password"]
+    # Step 2a: if yes, go to company's page and create cookies
+            session["user_id"] = @user["id"]
             flash["notice"] = "You're in!"
             redirect_to "/companies"
             else
@@ -25,6 +26,14 @@ def create
     flash["notice"] = "Incorrect credentials"
     end
 end
+
+def destroy
+    flash["See ya later!"]
+    session["user_id"] = nil
+    redirect_to "/sessions/new"
+end
+
+
 
 
 end
